@@ -2,7 +2,6 @@
 
 
 const gulp = require('gulp');
-const gutil = require('gulp-util')
 const watch = require('gulp-watch');
 const runSequence = require('run-sequence');
 
@@ -23,7 +22,7 @@ module.exports = (config, options) => {
     options.prefix = options.prefix || 'gulp-simple-';
 
 
-    function errorHandler(error) { gulplog.error(error.message) }
+    function errorHandler(error) { logger.error(error.message) }
 
     function createPipe(pipesRaw) {
         if (!pipesRaw || !pipesRaw.length) return empty;
@@ -86,11 +85,11 @@ module.exports = (config, options) => {
                 switch (vinyl.event) {
                     case 'add':
                     case 'change':
-                        executeGulpTask(type, vinyl.path).on('end', () => gulplog.info(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
+                        executeGulpTask(type, vinyl.path).on('end', () => logger.info(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
                         break;
 
                     case 'unlink':
-                        gulplog.info(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
+                        logger.info(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
                         break;
                 }
             }).on('error', errorHandler);
