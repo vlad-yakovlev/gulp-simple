@@ -18,7 +18,7 @@ Clean destination folder
 
 ## API
 
-```
+```js
 require('gulp-simple')(config, options);
 ```
 
@@ -119,7 +119,7 @@ Enable minify. See `config.types[type].minify`
 
 Add to your project `gulpfile.js`:
 
-```
+```js
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 const minimist = require('minimist');
