@@ -56,7 +56,7 @@ module.exports = (config, options) => {
     });
 
     config.types.etc = {
-        src: [ path.resolve(config.src, '*/**') ].concat(Object.keys(config.types).map(typeName => '!' + path.resolve(config.src, config.types[typeName].src)),
+        src: [ path.resolve(config.src, '*/**') ].concat(Object.keys(config.types).map(typeName => '!' + path.resolve(config.src, config.types[typeName].src))),
         dest: config.dest,
         pipe: empty,
         minify: empty,
