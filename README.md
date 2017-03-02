@@ -122,7 +122,7 @@ Add to your project `gulpfile.js`:
 ```
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
-const minify = require('minimist');
+const minimist = require('minimist');
 
 require('gulp-simple')({
     src: 'source',
