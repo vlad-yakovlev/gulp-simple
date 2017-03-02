@@ -47,8 +47,6 @@ module.exports = (config, options) => {
     }
 
 
-    config.types.etc = { src: [ '**/*' ] };
-
     Object.keys(config.types).forEach(typeName => {
         let type = config.types[typeName];
         type.src = path.resolve(config.src, type.src);
@@ -57,12 +55,12 @@ module.exports = (config, options) => {
         type.minify = createPipe(type.minify);
     });
 
-    Object.keys(config.types).forEach(typeName => {
-        if (typeName === 'etc') return;
-
-        let type = config.types[typeName];
-        config.types.etc.src.push(`!${type.src}`);
-    });
+    config.types.etc = {
+        src: [ path.resolve(config.src, '*/**') ].concat(Object.keys(config.types).map(typeName => '!' + path.resolve(config.src, config.types[typeName].src)),
+        dest: config.dest,
+        pipe: empty,
+        minify: empty,
+    };
 
 
     //=========================
