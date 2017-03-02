@@ -3,15 +3,15 @@
 
 ## Gulp tasks
 
-### build
+#### build
 
 Build project
 
-### watch
+#### watch
 
 Watch for changes
 
-### clean
+#### clean
 
 Clean destination folder
 
@@ -22,13 +22,13 @@ Clean destination folder
 require('gulp-simple')(config, options);
 ```
 
-### config
+#### config
 
 Type: `Object`
 
 Required
 
-### config.src
+#### config.src
 
 Type: `String`
 
@@ -36,7 +36,7 @@ Required
 
 Source directory
 
-### config.dest
+#### config.dest
 
 Type: `String`
 
@@ -44,7 +44,7 @@ Required
 
 Destination directory
 
-### config.types
+#### config.types
 
 Type: `Object`
 
@@ -52,15 +52,15 @@ Required
 
 List of types
 
-### config.types[type].src
+#### config.types[type].src
 
-**Type**: `String`
+Type: `String`
 
 Required
 
 Filter souce relative `config.src`
 
-### config.types[type].dest
+#### config.types[type].dest
 
 Type: `String`
 
@@ -68,7 +68,7 @@ Default: `''`
 
 Destination folder relative `config.dest`
 
-### config.types[type].pipe
+#### config.types[type].pipe
 
 Type: `Array`
 
@@ -76,7 +76,7 @@ Default: empty pipe
 
 List of pipes
 
-### config.types[type].pipe[n]
+#### config.types[type].pipe[n]
 
 Type: `Array of String`
 
@@ -84,13 +84,13 @@ Required
 
 First is name of npm module, Following are arguments
 
-### config.types[type].minify
+#### config.types[type].minify
 
 See `config.types[type].pipe`
 
 Uses when `options.minify` is `true`
 
-### config.clean
+#### config.clean
 
 Type: `String` `Array of String`
 
@@ -98,7 +98,7 @@ Default: `config.dest`
 
 Argument for [del](https://www.npmjs.com/package/del)
 
-### options.prefix
+#### options.prefix
 
 Type: `String`
 
@@ -106,7 +106,7 @@ Default: `gulp-simple-`
 
 Prefix for gulp tasks
 
-### options.minify
+#### options.minify
 
 Type: `Boolean`
 
