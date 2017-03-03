@@ -1,7 +1,7 @@
 {
     "name": "gulp-simple",
     "description": "Simple gulp",
-    "version": "0.0.9",
+    "version": "0.0.11",
     "main": "index.js",
     "keywords": [ "gulp", "simple", "config" ],
     "author": "vlad309523",
@@ -14,9 +14,9 @@
         "run-sequence": "1",
         "lazypipe": "1",
         "gulp-filter": "5",
-        "gulp-empty-pipe": "4",
+        "gulp-empty-pipe": "5",
         "gulp-plumber": "1",
         "del": "2",
-        "gulplog": "1"
+        "glogg": "1"
     }
 }

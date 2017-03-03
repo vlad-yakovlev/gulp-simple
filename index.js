@@ -10,11 +10,10 @@ const filter = require('gulp-filter');
 const empty = require('gulp-empty-pipe');
 const plumber = require('gulp-plumber');
 
-const fs = require('fs');
 const path = require('path');
 const del = require('del');
 
-const logger = require('gulplog');
+const logger = require('glogg')('gulp-simple');
 
 
 module.exports = (config, options) => {
