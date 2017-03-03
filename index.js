@@ -13,7 +13,7 @@ const plumber = require('gulp-plumber');
 const path = require('path');
 const del = require('del');
 
-const logger = require('glogg')('gulp-simple');
+const log = require('fancy-log');
 
 
 module.exports = (config, options) => {
@@ -21,7 +21,7 @@ module.exports = (config, options) => {
     options.prefix = options.prefix || 'gulp-simple-';
 
 
-    function errorHandler(error) { logger.error(error.message) }
+    function errorHandler(error) { log.error(error.message) }
 
     function createPipe(pipesRaw) {
         if (!pipesRaw || !pipesRaw.length) return empty;
@@ -84,11 +84,11 @@ module.exports = (config, options) => {
                 switch (vinyl.event) {
                     case 'add':
                     case 'change':
-                        executeGulpTask(type, vinyl.path).on('end', () => logger.info(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
+                        executeGulpTask(type, vinyl.path).on('end', () => log(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
                         break;
 
                     case 'unlink':
-                        logger.info(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
+                        log(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
                         break;
                 }
             }).on('error', errorHandler);

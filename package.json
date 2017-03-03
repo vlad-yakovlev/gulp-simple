@@ -1,7 +1,7 @@
 {
     "name": "gulp-simple",
     "description": "Simple gulp",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "main": "index.js",
     "keywords": [ "gulp", "simple", "config" ],
     "author": "vlad309523",
@@ -17,6 +17,6 @@
         "gulp-empty-pipe": "5",
         "gulp-plumber": "1",
         "del": "2",
-        "glogg": "1"
+        "fancy-log": "1"
     }
 }
