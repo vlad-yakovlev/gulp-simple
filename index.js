@@ -19,7 +19,7 @@ const log = require('fancy-log');
 module.exports = (config, options) => {
     config.clean = config.clean || config.dest;
     options.prefix = options.prefix || 'gulp-simple-';
-    options.onWatch = options.onWatch || () => {};
+    options.onWatch = options.onWatch || (() => {});
     options.fullWatch = options.fullWatch || options.fullWatch;
 
 
