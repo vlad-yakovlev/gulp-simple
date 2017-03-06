@@ -109,7 +109,7 @@ let simple = {
     prefix: 'gulp-simple-',
     minify: false,
     onWatch: () => {},
-    incrementalWatch: false,
+    incrementalWatch: true,
 }
 
 module.exports = simple;

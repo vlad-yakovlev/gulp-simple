@@ -120,13 +120,13 @@ Default: `() => {}`
 
 `watch.on('change')` callback
 
-### fullWatch
+### incrementalWatch
 
 Type: `Boolean`
 
-Default: `false`
+Default: `true`
 
-Disable incremental watch
+Enable incremental watch
 
 ### config
 
@@ -147,10 +147,12 @@ Add to your project `gulpfile.js`:
 
 ```js
 const gulp = require('gulp');
+const gulpSimple = require('gulp-simple')
 const runSequence = require('run-sequence');
 const minimist = require('minimist');
 
-require('gulp-simple')({
+gulpSimple.minify = minimist(process.argv.slice(2)).release;
+gulpSimple.init({
     src: 'source',
     dest: 'build',
     types: [
@@ -184,8 +186,6 @@ require('gulp-simple')({
         }
     ],
     clean: [ 'build/**', '!build', '!build/uploads' ]
-}, {
-    minify: minimist(process.argv.slice(2)).release,
 });
 
 gulp.task('default', callback => runSequence(
