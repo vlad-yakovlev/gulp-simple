@@ -19,6 +19,8 @@ const log = require('fancy-log');
 module.exports = (config, options) => {
     config.clean = config.clean || config.dest;
     options.prefix = options.prefix || 'gulp-simple-';
+    options.onWatch = options.onWatch || () => {};
+    options.fullWatch = options.fullWatch || options.fullWatch;
 
 
     function errorHandler(error) { log.error(error.message) }
@@ -84,14 +86,14 @@ module.exports = (config, options) => {
                 switch (vinyl.event) {
                     case 'add':
                     case 'change':
-                        executeGulpTask(type, vinyl.path).on('end', () => log(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
+                        executeGulpTask(type, !options.fullWatch ? vinyl.path : null).on('end', () => log(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
                         break;
 
                     case 'unlink':
                         log(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
                         break;
                 }
-            }).on('error', errorHandler);
+            }).on('error', errorHandler).on('change', options.onWatch);
         });
     });
 };

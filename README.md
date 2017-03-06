@@ -114,6 +114,22 @@ Default: `false`
 
 Enable minify. See `config.types[type].minify`
 
+#### options.onWatch
+
+Type: `Function`
+
+Default: `() => {}`
+
+`watch.on('change')` callback
+
+#### options.fullWatch
+
+Type: `Boolean`
+
+Default: `false`
+
+Disable incremental watch
+
 
 ## Sample
 
