@@ -1,7 +1,7 @@
 {
     "name": "gulp-simple",
     "description": "Simple gulp",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "main": "index.js",
     "keywords": [ "gulp", "simple", "config" ],
     "author": "vlad309523",
