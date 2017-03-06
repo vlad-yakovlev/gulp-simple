@@ -16,84 +16,100 @@ const del = require('del');
 const log = require('fancy-log');
 
 
-module.exports = (config, options) => {
-    config.clean = config.clean || config.dest;
-    options.prefix = options.prefix || 'gulp-simple-';
-    options.onWatch = options.onWatch || (() => {});
-    options.fullWatch = options.fullWatch || options.fullWatch;
+let simple = {
+    init: (config) => {
+        const that = simple;
+
+        that.config = JSON.parse(JSON.stringify(config));
+        that.config.clean = that.config.clean || that.config.dest;
 
 
-    function errorHandler(error) { log.error(error.message) }
+        function errorHandler(error) { log.error(error.message) }
 
-    function createPipe(pipesRaw) {
-        if (!pipesRaw || !pipesRaw.length) return empty;
+        function createPipe(pipesRaw) {
+            if (!pipesRaw || !pipesRaw.length) return empty;
 
-        let result = lazypipe();
-        pipesRaw.forEach(pipeRaw => {
-            let pipeData = JSON.parse(JSON.stringify(pipeRaw));
-            pipeData[0] = require(pipeData[0]);
-            result = result.pipe.apply(result, pipeData);
+            let result = lazypipe();
+            pipesRaw.forEach(pipeRaw => {
+                let pipeData = JSON.parse(JSON.stringify(pipeRaw));
+                pipeData[0] = require(pipeData[0]);
+                result = result.pipe.apply(result, pipeData);
+            });
+            return result;
+        }
+
+        function executeGulpTask({ src, dest, pipe, minify }, filePath) {
+            return gulp.src(src, { dot: true })
+                .pipe(filter(file => !filePath || file.path === filePath))
+                .pipe(plumber({ errorHandler }))
+                .pipe(pipe())
+                .pipe(that.minify ? minify() : empty())
+                .pipe(gulp.dest(dest));
+        }
+
+
+        Object.keys(that.config.types).forEach(typeName => {
+            let type = that.config.types[typeName];
+            type.src = path.resolve(that.config.src, type.src);
+            type.dest = path.resolve(that.config.dest, type.dest || '');
+            type.pipe = createPipe(type.pipe);
+            type.minify = createPipe(type.minify);
         });
-        return result;
-    }
 
-    function executeGulpTask({ src, dest, pipe, minify }, filePath) {
-        return gulp.src(src, { dot: true })
-            .pipe(filter(file => !filePath || file.path === filePath))
-            .pipe(plumber({ errorHandler }))
-            .pipe(pipe())
-            .pipe(options.minify ? minify() : empty())
-            .pipe(gulp.dest(dest));
-    }
+        that.config.types.etc = {
+            src: [ path.resolve(that.config.src, '**/*') ].concat(Object.keys(that.config.types).map(typeName => '!' + path.resolve(that.config.src, that.config.types[typeName].src))),
+            dest: that.config.dest,
+            pipe: empty,
+            minify: empty,
+        };
 
 
-    Object.keys(config.types).forEach(typeName => {
-        let type = config.types[typeName];
-        type.src = path.resolve(config.src, type.src);
-        type.dest = path.resolve(config.dest, type.dest || '');
-        type.pipe = createPipe(type.pipe);
-        type.minify = createPipe(type.minify);
-    });
+        //=========================
+        //  Gulp tasks
+        //=========================
 
-    config.types.etc = {
-        src: [ path.resolve(config.src, '**/*') ].concat(Object.keys(config.types).map(typeName => '!' + path.resolve(config.src, config.types[typeName].src))),
-        dest: config.dest,
-        pipe: empty,
-        minify: empty,
-    };
-
-
-    //=========================
-    //  Gulp tasks
-    //=========================
-
-    Object.keys(config.types).forEach(typeName => {
-        let type = config.types[typeName];
-        gulp.task(options.prefix + typeName, () => executeGulpTask(type));
-    });
-
-    gulp.task(options.prefix + 'build', callback => runSequence(
-        Object.keys(config.types).map(typeName => options.prefix + typeName),
-        callback
-    ));
-
-    gulp.task(options.prefix + 'clean', callback => del(config.clean, callback));
-
-    gulp.task(options.prefix + 'watch', callback => {
-        Object.keys(config.types).forEach(typeName => {
-            let type = config.types[typeName];
-            watch(type.src, vinyl => {
-                switch (vinyl.event) {
-                    case 'add':
-                    case 'change':
-                        executeGulpTask(type, !options.fullWatch ? vinyl.path : null).on('end', () => log(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`));
-                        break;
-
-                    case 'unlink':
-                        log(`Уou must restart gulp to delete file "${path.relative(config.src, vinyl.path)}"`);
-                        break;
-                }
-            }).on('error', errorHandler).on('change', options.onWatch);
+        Object.keys(that.config.types).forEach(typeName => {
+            let type = that.config.types[typeName];
+            that.pipes = [];
+            gulp.task(that.prefix + typeName, () => {
+               let pipe = executeGulpTask(type);
+               that.pipes.push(pipe);
+               return pipe;
+            });
         });
-    });
-};
+
+        gulp.task(that.prefix + 'build', callback => runSequence(
+            Object.keys(that.config.types).map(typeName => that.prefix + typeName),
+            callback
+        ));
+
+        gulp.task(that.prefix + 'clean', callback => del(that.config.clean, callback));
+
+        gulp.task(that.prefix + 'watch', callback => {
+            Object.keys(that.config.types).forEach(typeName => {
+                let type = that.config.types[typeName];
+                watch(type.src, vinyl => {
+                    switch (vinyl.event) {
+                        case 'add':
+                        case 'change':
+                            executeGulpTask(type, that.incrementalWatch ? vinyl.path : null).on('end', () => {
+                                log(`File "${path.relative('.', vinyl.path)}": ${vinyl.event} as "${typeName}"`);
+                                that.onWatch();
+                            });
+                            break;
+
+                        case 'unlink':
+                            log(`Уou must restart gulp to delete file "${path.relative(that.config.src, vinyl.path)}"`);
+                            break;
+                    }
+                }).on('error', errorHandler);
+            });
+        });
+    },
+    prefix: 'gulp-simple-',
+    minify: false,
+    onWatch: () => {},
+    incrementalWatch: false,
+}
+
+module.exports = simple;

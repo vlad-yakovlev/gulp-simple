@@ -18,9 +18,7 @@ Clean destination folder
 
 ## API
 
-```js
-require('gulp-simple')(config, options);
-```
+### init(config);
 
 #### config
 
@@ -88,7 +86,7 @@ First is name of npm module, Following are arguments
 
 See `config.types[type].pipe`
 
-Uses when `options.minify` is `true`
+Uses when `minify` is `true`
 
 #### config.clean
 
@@ -98,7 +96,7 @@ Default: `config.dest`
 
 Argument for [del](https://www.npmjs.com/package/del)
 
-#### options.prefix
+### prefix
 
 Type: `String`
 
@@ -106,7 +104,7 @@ Default: `gulp-simple-`
 
 Prefix for gulp tasks
 
-#### options.minify
+### minify
 
 Type: `Boolean`
 
@@ -114,7 +112,7 @@ Default: `false`
 
 Enable minify. See `config.types[type].minify`
 
-#### options.onWatch
+### onWatch
 
 Type: `Function`
 
@@ -122,13 +120,25 @@ Default: `() => {}`
 
 `watch.on('change')` callback
 
-#### options.fullWatch
+### fullWatch
 
 Type: `Boolean`
 
 Default: `false`
 
 Disable incremental watch
+
+### config
+
+Type: `Object`
+
+Object after parse
+
+### pipes
+
+Type: `Array`
+
+Pipes, generated in `build`
 
 
 ## Sample
